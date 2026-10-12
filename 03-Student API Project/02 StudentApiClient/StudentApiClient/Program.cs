@@ -28,6 +28,12 @@ namespace StudentApiClient
 
             await AddStudent(new Student { Name = "Ahmed", Age = 20, Grade = 14 });
             await AddStudent(new Student { Name = "Abdo", Age = -1, Grade = 14 });
+
+            await DeleteStudent(1);
+
+
+            await GetAllStudents();
+
         }
 
         static async Task GetAllStudents()
@@ -172,6 +178,35 @@ namespace StudentApiClient
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
 
+        }
+        static async Task DeleteStudent(int id)
+        {
+            try
+            {
+                Console.WriteLine("\n_____________________________");
+                Console.WriteLine($"\nDeleting student with ID {id}...\n");
+                var response = await httpClient.DeleteAsync($"{id}");
+
+                //It's recommended to use the server response and avoid hard coding messages from client side
+                Console.WriteLine(await response.Content.ReadAsStringAsync());
+
+                //if (response.IsSuccessStatusCode)
+                //{
+                //    Console.WriteLine($"Student with ID {id} has been deleted.");
+                //}
+                //else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                //{
+                //    Console.WriteLine($"Bad Request: Not accepted ID {id}");
+                //}
+                //else if (response.StatusCode == System.Net.HttpStatusCode.NotFound)
+                //{
+                //    Console.WriteLine($"Not Found: Student with ID {id} not found.");
+                //}
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
         }
 
     }

@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using StudentApi.Models;
 using StudentApi.DataSimulation;
 using System.Collections.Generic;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace StudentApi.Controllers
 {
@@ -101,6 +102,27 @@ namespace StudentApi.Controllers
 
             return CreatedAtRoute("GetStudentByID",new { id = newStudent.Id}, newStudent);
 
+        }
+
+        [HttpDelete("{id}", Name = "DeleteStudent")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult DeleteStudent(int id)
+        {
+            if (id < 1)
+            {
+                return BadRequest($"Not accepted ID {id}");
+            }
+
+            var student = StudentDataSimulation.StudentsList.FirstOrDefault(s => s.Id == id);
+            if (student == null)
+            {
+                return NotFound($"Student with ID {id} not found.");
+            }
+
+            StudentDataSimulation.StudentsList.Remove(student);
+            return Ok($"Student with ID {id} has been deleted.");
         }
 
     }
