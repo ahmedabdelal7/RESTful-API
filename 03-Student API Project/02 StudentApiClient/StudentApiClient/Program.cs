@@ -26,6 +26,8 @@ namespace StudentApiClient
             await GetStudentById(1); // Example: Get student with ID 1
             await GetStudentById(20); // Example: Get student with ID 20
 
+            await AddStudent(new Student { Name = "Ahmed", Age = 20, Grade = 14 });
+            await AddStudent(new Student { Name = "Abdo", Age = -1, Grade = 14 });
         }
 
         static async Task GetAllStudents()
@@ -57,9 +59,6 @@ namespace StudentApiClient
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
-
-
-
         static async Task GetPassedStudents()
         {
             try
@@ -89,8 +88,6 @@ namespace StudentApiClient
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
-
-
         static async Task GetAverageGrade()
         {
             try
@@ -114,8 +111,6 @@ namespace StudentApiClient
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
-
-
         static async Task GetStudentById(int id)
         {
             try
@@ -147,11 +142,37 @@ namespace StudentApiClient
                 Console.WriteLine($"An error occurred: {ex.Message}");
             }
         }
+        static async Task AddStudent(Student student)
+        {
+            Console.WriteLine("\n_____________________________");
+            Console.WriteLine("\nAdding a new student...\n");
 
 
+            try
+            {
 
+                var response = await httpClient.PostAsJsonAsync("", student);
 
+                if (response.IsSuccessStatusCode)
+                {
+                    var addedStudent = await response.Content.ReadFromJsonAsync<Student>();
 
+                    Console.WriteLine("Student Added Successfully!");
+                    Console.WriteLine($"Added Student - ID: {addedStudent.Id}, Name: {addedStudent.Name}, Age: {addedStudent.Age}, Grade: {addedStudent.Grade}");
+
+                }
+                else if (response.StatusCode == System.Net.HttpStatusCode.BadRequest)
+                {
+                    Console.WriteLine("Bad Request: Invalid student data.");
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred: {ex.Message}");
+            }
+
+        }
 
     }
 
